@@ -177,14 +177,10 @@ class SysCommands:
             return
 
         old_node = self.tcp_server.publishers_table.get(topic)
-        if old_node is not None:
-            self.tcp_server.unregister_node(old_node)
-
-        new_publisher = RosPublisher(topic, message_class, queue_size=queue_size, latch=latch)
-
-        self.tcp_server.publishers_table[topic] = new_publisher
-
-        self.tcp_server.loginfo("RegisterPublisher({}, {}) OK".format(topic, message_class))
+        if old_node is None:
+            new_publisher = RosPublisher(topic, message_class, queue_size=queue_size, latch=latch)
+            self.tcp_server.publishers_table[topic] = new_publisher
+            self.tcp_server.loginfo("RegisterPublisher({}, {}) OK".format(topic, message_class))
 
     def ros_service(self, topic, message_name):
         if topic == "":
